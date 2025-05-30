@@ -1,0 +1,42 @@
+{% extends 'user/design.html' %}
+{% block userblock %}
+{% load staticfiles %}
+
+<script>
+window.onload = function() {
+
+var chart = new CanvasJS.Chart("chartContainer", {
+	animationEnabled: true,
+	title: {
+		text: "Process Monitoring System for Large-Scale Industrial Processes"
+	},
+	data: [{
+	{% if chart_type == "bar" %}
+		type: "bar",
+	{% elif chart_type == "pie" %}
+		type: "pie",
+	{% elif chart_type == "spline" %}
+		type: "spline",
+	{% endif %}
+		startAngle: 240,
+		yValueFormatString: "##0.00\"%\"",
+		indexLabel: "{label} {y}",
+		dataPoints: [
+		{% for o in objects %}
+			{y: {{o.dcount}}, label: "{{o.blk}}"},
+		{% endfor %}
+		]
+	}]
+});
+chart.render();
+
+}
+
+</script>
+
+
+<div id="chartContainer" class="graph" style="height: 370px; width: 1020px; margin: 0px auto;margin-left:100px;"></div>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+
+{% endblock %}
